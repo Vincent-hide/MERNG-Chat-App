@@ -14,7 +14,10 @@ import { APP_PORT, NODE_ENV, IN_PROD } from "./config";
   }
   await mongoose.connect(
     'mongodb://localhost:27017/MERNG_CHAT',
-    { useNewUrlParser: true }
+    {
+      useNewUrlParser: true,
+      useCreateIndex: true
+    }
   );
 
   const app = express();
