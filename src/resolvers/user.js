@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { User } from "../models";
-import { UserInputError } from 'apollo-server-express';
+import {User} from "../models";
+import {UserInputError} from 'apollo-server-express';
 
-import { SignUp } from "../schemas";
+import {SignUp} from "../schemas";
 
 export default {
   Query: {
@@ -13,7 +13,7 @@ export default {
     },
     user: (root, args, context, info) => {
       // TODO auth, projection
-      if(!mongoose.Types.ObjectId.isValid(args.id)) {
+      if (!mongoose.Types.ObjectId.isValid(args.id)) {
         throw new UserInputError(`${args.id} is not a valid user ID`);
       }
     },
@@ -24,10 +24,13 @@ export default {
 
       // validation
       // TODO this validation not working
-      await SignUp.validate(args, { abortEarly: false });
+      const result = await SignUp.validate(args, {abortEarly: false});
 
-      return User.create(args);
-      // create() fires save() hooks
+      if(result.error) {
+        throw new Error("Invalid input");
+      } else {
+        return User.create(args);
+      }
     }
   }
 }

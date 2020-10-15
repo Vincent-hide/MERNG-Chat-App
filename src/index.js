@@ -1,9 +1,10 @@
 import { ApolloServer, gql } from "apollo-server-express"; // import enabled by babel from esm
 import typeDefs from "./typeDefs";
 import mongoose from "mongoose";
+import session from "express-session";
 import resolvers from "./resolvers";
 import express from "express";
-import { APP_PORT, NODE_ENV, IN_PROD } from "./config";
+import { APP_PORT, NODE_ENV, SESS_NAME, SESS_SECRET, SESS_LIFETIME, IN_PROD } from "./config";
 
 
 (async () => {
@@ -23,6 +24,13 @@ import { APP_PORT, NODE_ENV, IN_PROD } from "./config";
   const app = express();
 
   app.disable('x-powered-by');
+
+  app.use(session({
+    name: SESS_NAME,
+    secret: SESS_SECRET,
+    resave: false,
+    saveUninitialized: false
+  }))
 
   const server = new ApolloServer({
     typeDefs,
