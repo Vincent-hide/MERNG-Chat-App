@@ -22,7 +22,9 @@ export default {
 
       // validation
 
-      return User.create(args)
+
+      return User.create(args);
+      // create() fires save() hooks
     }
   }
 }
