@@ -2,10 +2,28 @@ import mongoose from 'mongoose';
 import { hash } from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  username: { type: String, required: true },
-  name: { type: String, required: true },
-  password: { type: String, required: true }
+  email: {
+    type: String,
+    // required: true,
+    // unique: true,
+    validator: email => User.doesExist({ email }), // if the count of the same email in db is 0 or not
+    message: ({ value }) => `Email ${value} has already been taken`,
+  },
+  username: {
+    type: String,
+    // required: true,
+    // unique: true,
+    validator: username => User.doesExist({ username }), // if the count of the same email in db is 0 or not
+    message: ({ value }) => `Username ${value} has already been taken`,
+  },
+  name: {
+    type: String,
+    // required: true
+  },
+  password: {
+    type: String,
+    // required: true
+  }
 }, { timestamps: true });
 
 // .pre() gets executed before executing save()
@@ -21,4 +39,10 @@ userSchema.pre('save', async function(next) { // this cannot be arrow function, 
   next();
 });
 
-export default mongoose.model('User', userSchema);
+userSchema.statics.doesExist = async function(option) {
+  return await this.where(options).countDocuments() === 0
+}
+
+const User = mongoose.model('User', userSchema);
+
+export default User;
