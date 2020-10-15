@@ -4,13 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon"
+    "dev": "SET NODE_ENV=development & nodemon -r esm",
+    "start": "SET NODE_ENV=production & node -r esm",
+    "dev2": "NODE_ENV=development nodemon -r esm",
+    "start2": "NODE_ENV=production node -r esm"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.18.2",
+    "apollo-server-express": "^2.18.2",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
     "graphql": "^15.3.0",
+    "mongoose": "^5.10.9",
     "nodemon": "^2.0.5"
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
   }
 }
