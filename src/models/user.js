@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-import { hash } from 'bcryptjs';
+import mongoose, { Schema } from 'mongoose';
+import { hash, compare } from 'bcryptjs';
+import Chat from "../models/chat"
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -23,7 +24,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     // required: true
-  }
+  },
+  chats: [{
+    type: Schema.Types.ObjectId,
+    ref: Chat
+  }],
 }, { timestamps: true });
 
 // .pre() gets executed before executing save()
@@ -31,7 +36,7 @@ userSchema.pre('save', async function(next) { // this cannot be arrow function, 
   console.log("THIS", this);
   if(this.isModified('password')) {
     try {
-      this.password = await hash(this.password, 10);
+      this.password = await hash(this.password, +10);
     } catch (e) {
       next(e);
     }
@@ -39,9 +44,15 @@ userSchema.pre('save', async function(next) { // this cannot be arrow function, 
   next();
 });
 
+// a method attached to a class
 userSchema.statics.doesExist = async function(option) {
   return await this.where(options).countDocuments() === 0
 }
+
+// a method attached to an object
+// userSchema.methods.matchesPassword = function(password) {
+//   return compare(password, this.password);
+// }
 
 const User = mongoose.model('User', userSchema);
 

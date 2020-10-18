@@ -7,6 +7,8 @@ export default gql`
     }
     extend type Mutation {
         signUp(email: String!, username: String!, name: String!, password: String!): User
+#        signIn(email: String!, password: String!): User
+#        signOut(): Boolean
     }
     type User {
         id: ID!
@@ -14,5 +16,7 @@ export default gql`
         username: String!
         name: String!
         createdAt: String!
+        chats: [Chat!]!
+        updatedAt: String!
     }
 `
